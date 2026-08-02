@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/* table */
+table {
+    @apply w-full overflow-auto;
+}
+
+td,
+th {
+    @apply border p-2 last:text-center;
+}
+
+/* form */
+input, select {
+    @apply w-full border outline-0 border-gray-300 p-2 rounded-md mb-5;
+}
+
+input[type="radio"] {
+    @apply w-auto mr-2;
+}
+
+.error {
+    @apply mb-3 text-red-500 text-sm inline-block;
+}
+
+/* button */
+
+.btn-submit {
+    @apply border border-gray-300 p-2 px-5 rounded-md block mx-auto mb-5;
+}
+
+.btn-new {
+    @apply border border-gray-300 p-2 px-5 rounded-md inline-block mb-5;
+}
+
+.btn-edit {
+    @apply text-yellow-500 inline-block px-2;
+}
+
+.btn-delete {
+    @apply text-rose-500
+}
+
+/* navbar */
+nav {
+    @apply flex justify-between items-center p-4 bg-white shadow-md;
+}
+
+nav ul li {
+    @apply inline-block;
+}
+
+nav ul li a {
+    @apply border p-2 rounded-md mr-2;
+}
+
+h1 {
+    @apply mt-2 mb-7 text-center text-2xl;
+}
+
+/* auth-form */
+.auth-form {
+    @apply border border-gray-100 rounded-md shadow-lg p-10 absolute top-1/2 left-1/2 -translate-1/2;
+}
+
+.auth-form p {
+    @apply text-center text-sm;
+}
+
+.auth-form p a {
+    @apply text-blue-500 underline text-lg;
+}
