@@ -5,9 +5,14 @@ table {
     @apply w-full;
 }
 
+table thead tr,
+table tfoot tr {
+    @apply bg-gray-50 text-gray-600;
+}
+
 td,
 th {
-    @apply border p-2 last:text-center text-nowrap;
+    @apply border border-gray-600 p-2 last:text-center text-nowrap;
 }
 
 /* form */
@@ -70,6 +75,10 @@ nav ul li button {
 
 h1 {
     @apply mt-2 mb-7 text-center text-2xl;
+}
+
+h2 {
+    @apply mt-2 mb-5 text-xl;
 }
 
 /* auth-form */

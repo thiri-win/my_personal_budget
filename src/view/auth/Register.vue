@@ -41,7 +41,7 @@ const handleRegister = async () => {
         <h1>Register</h1>
         <form @submit.prevent="handleRegister">
             <span class="error">{{ errorMessage }}</span>
-            <input type="text" name="name" id="name" placeholder="Your Name" v-model="form.name" required>
+            <input type="text" name="name" id="name" placeholder="Your Name" v-model="form.name" required autofocus>
             <input type="email" name="email" id="email" placeholder="Your Email" v-model="form.email" required>
             <input type="password" name="password" id="password" placeholder="Your Password" v-model="form.password" required>
             <button class="btn-submit">

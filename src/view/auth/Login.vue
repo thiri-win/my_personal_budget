@@ -34,7 +34,7 @@ const handleLogin = async () => {
         <h1>Login</h1>
         <form @submit.prevent="handleLogin">
             <span class="error">{{ errorMessage }}</span>
-            <input type="email" name="email" id="email" v-model="form.email" placeholder="example@gmail.com" required>
+            <input type="email" name="email" id="email" v-model="form.email" placeholder="example@gmail.com" required autofocus>
             <input type="password" name="password" id="password" v-model="form.password" placeholder="your password" required>
             <button class="btn-submit">
                 {{ loading ? 'Login ...' : 'Login' }}
