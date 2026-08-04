@@ -110,12 +110,12 @@ const handleCreateOrUpdateItem = async () => {
 </script>
 
 <template>
-    <h1>{{ isEditMode ? 'Edit Your Item' : 'Let\'s add New' }}</h1>
+    <h1>{{ isEditMode ? 'စာရင်းပြင်မယ်' : 'စာရင်းအသစ်ထည့်မယ်' }}</h1>
     <p v-if="loading">Loading ...</p>
     <form @submit.prevent="handleCreateOrUpdateItem">
         <span class="error">{{ errorMessage }}</span>
         <input type="date" name="date" id="date" placeholder="date" v-model="form.date">
-        <input type="text" name="description" id="description" placeholder="Description" v-model="form.description">
+        <input type="text" name="description" id="description" placeholder="Description" v-model="form.description" required autofocus>
         <select name="category_id" id="category_id" v-model="form.category_id">
             <option value="">Select Category</option>
             <template v-for="category in categories">

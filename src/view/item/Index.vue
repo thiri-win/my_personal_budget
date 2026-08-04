@@ -46,38 +46,40 @@ onMounted(() => { fetchItems() })
         <i class="fa-solid fa-plus-circle"></i>
         New Item
     </router-link>
-    <p v-if="loading">Loading Items ... </p>
-    <p v-if="items.length == 0">No Items to display</p>
+    <p v-if="loading" class="show-noti">Loading Items ... </p>
+    <p v-if="!loading && !items.length" class="show-noti">No Items to display</p>
     <span class="error">{{ errorMessage }}</span>
-    <table v-if="!loading && items.length">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Category</th>
-                <th>Amount</th>
-                <th>Note</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="item in items">
-                <td>{{ item.id }}</td>
-                <td>{{ item.date }}</td>
-                <td>{{ item.description }}</td>
-                <td>{{ item.category.title }}</td>
-                <td>{{ item.amount }}</td>
-                <td>{{ item.note }}</td>
-                <td>
-                    <router-link :to="`/items/edit/${item.id}`" class="btn-edit">
-                        <i class="fa-solid fa-file-pen"></i>
-                    </router-link>
-                    <button @click="handleDeleteItem(item.id)" class="btn-delete">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="w-full overflow-x-auto">
+        <table v-if="!loading && items.length">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Note</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in items">
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.category.title }}</td>
+                    <td>{{ item.amount }}</td>
+                    <td>{{ item.note }}</td>
+                    <td>
+                        <router-link :to="`/items/edit/${item.id}`" class="btn-edit">
+                            <i class="fa-solid fa-file-pen"></i>
+                        </router-link>
+                        <button @click="handleDeleteItem(item.id)" class="btn-delete">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </template>

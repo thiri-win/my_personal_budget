@@ -81,11 +81,11 @@ const handleCreateOrUpdateCategory = async () => {
 
 </script>
 <template>
-    <h1>{{ isEditMode ? 'Edit Your Category' : 'Let\'s add new Category' }}</h1>
+    <h1>{{ isEditMode ? 'အမျိုးအစားပြင်မယ်' : 'အမျိုးအစား အသစ်ထည့်မယ်' }}</h1>
     <p v-if="loading">Loading ...</p>
     <form @submit.prevent="handleCreateOrUpdateCategory">
         <span class="error">{{ errorMessage }}</span>
-        <input type="text" name="title" id="title" placeholder="Title" v-model="form.title" required>
+        <input type="text" name="title" id="title" placeholder="Title" v-model="form.title" required autofocus>
         <label for="sum">
             <input type="radio" name="status" id="sum" value="ပေါင်းရန်" v-model="form.status">ပေါင်းရန်
         </label>

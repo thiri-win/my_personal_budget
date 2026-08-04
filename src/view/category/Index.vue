@@ -48,34 +48,36 @@ onMounted(() => { fetchCategories() })
         <i class="fa-solid fa-plus-circle"></i>
         New Category
     </router-link>
-    <p v-if="loading">Loading Categories ... </p>
-    <p v-if="categories.length == 0">No Categories to display</p>
+    <p v-if="loading" class="show-noti">Loading Categories ... </p>
+    <p v-if="!loading && !categories.length" class="show-noti">No Categories to display</p>
     <span class="error">{{ errorMessage }}</span>
-    <table v-if="!loading">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Status</th>
-                <th>Note</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="category in categories">
-                <td>{{ category.id }}</td>
-                <td>{{ category.title }}</td>
-                <td>{{ category.status }}</td>
-                <td>{{ category.note }}</td>
-                <td>
-                    <router-link :to="`/categories/edit/${category.id}`" class="btn-edit">
-                        <i class="fa-solid fa-file-pen"></i>
-                    </router-link>
-                    <button @click="handleDeleteCategory(category.id)" class="btn-delete">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="w-full overflow-x-auto">
+        <table v-if="!loading && categories.length">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Note</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="category in categories">
+                    <td>{{ category.id }}</td>
+                    <td>{{ category.title }}</td>
+                    <td>{{ category.status }}</td>
+                    <td>{{ category.note }}</td>
+                    <td>
+                        <router-link :to="`/categories/edit/${category.id}`" class="btn-edit">
+                            <i class="fa-solid fa-file-pen"></i>
+                        </router-link>
+                        <button @click="handleDeleteCategory(category.id)" class="btn-delete">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </template>

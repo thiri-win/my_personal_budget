@@ -35,27 +35,27 @@ const handleLogout = async () => {
         <router-link to="/">
             <img src="/icon.png" alt="Logo" class="inline-block">
             <template v-if="user">
-                <span>{{ user.email }}</span>
+                <span>{{ user.user_metadata.display_name }}</span>
             </template>
         </router-link>
         <ul>
             <template v-if="user">
                 <li>
                     <router-link to="/items">
-                        <i class="fa-solid fa-folder-open"></i>
-                        <span>Item</span>
+                        <i class="fa-solid fa-list"></i>
+                        <span class="hidden lg:inline-block">Item</span>
                     </router-link>
                 </li>
                 <li>
                     <router-link to="/categories">
                         <i class="fa-solid fa-grip"></i>
-                        <span>Category</span>
+                        <span class="hidden lg:inline-block">Category</span>
                     </router-link>
                 </li>
                 <li>
                     <button @click="handleLogout">
                         <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                        <span>Logout</span>
+                        <span class="hidden lg:inline-block">Logout</span>
                     </button>
                 </li>
             </template>
