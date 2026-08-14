@@ -12,7 +12,7 @@ const fetchItems = async () => {
         errorMessage.value = '';
         const { data, error } = await supabase
             .from('items')
-            .select('*, category:categories(title)')
+            .select('*, category:categories(title, status)')
             .order('id', { ascending: true })
         if (error) throw error
         items.value = data
@@ -68,7 +68,9 @@ onMounted(() => { fetchItems() })
                     <td>{{ item.date }}</td>
                     <td>{{ item.description }}</td>
                     <td>{{ item.category.title }}</td>
-                    <td>{{ item.amount }}</td>
+                    <td class="text-right" :class="item.category.status == 'ပေါင်းရန်' ? 'text-green-500': 'text-red-500'">
+                        {{ item.amount.toLocaleString() }}
+                    </td>
                     <td>{{ item.note }}</td>
                     <td>
                         <router-link :to="`/items/edit/${item.id}`" class="btn-edit">

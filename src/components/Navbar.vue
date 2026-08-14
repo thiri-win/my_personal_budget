@@ -43,19 +43,19 @@ const handleLogout = async () => {
                 <li>
                     <router-link to="/items">
                         <i class="fa-solid fa-list"></i>
-                        <span class="hidden lg:inline-block">Item</span>
+                        <span class="hidden sm:inline-block">Item</span>
                     </router-link>
                 </li>
                 <li>
                     <router-link to="/categories">
                         <i class="fa-solid fa-grip"></i>
-                        <span class="hidden lg:inline-block">Category</span>
+                        <span class="hidden sm:inline-block">Category</span>
                     </router-link>
                 </li>
                 <li>
                     <button @click="handleLogout">
                         <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                        <span class="hidden lg:inline-block">Logout</span>
+                        <span class="hidden sm:inline-block">Logout</span>
                     </button>
                 </li>
             </template>
