@@ -47,12 +47,22 @@ input[type="radio"] {
     @apply border border-gray-300 p-2 px-5 rounded-md inline-block mb-5;
 }
 
+.btn-show,
+.btn-edit,
+.btn-delete {
+    @apply px-1 inline-block cursor-pointer;
+}
+
+.btn-show {
+    @apply text-blue-500;
+}
+
 .btn-edit {
-    @apply text-yellow-500 inline-block px-2;
+    @apply text-yellow-500;
 }
 
 .btn-delete {
-    @apply text-rose-500
+    @apply text-rose-500;
 }
 
 /* navbar */

@@ -27,6 +27,11 @@ const router = createRouter({
       component: () => import('../view/category/Index.vue')
     },
     {
+      path: '/categories/:id',
+      name: 'categoriesShow',
+      component: () => import('../view/category/Show.vue')
+    },
+    {
       path: '/categories/create',
       name: 'categoriesCreate',
       component: () => import('../view/category/Create.vue')

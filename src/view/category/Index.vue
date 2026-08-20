@@ -1,4 +1,5 @@
 <script setup>
+
 import { supabase } from '@/services/supabase';
 import { onMounted, ref } from 'vue';
 
@@ -69,6 +70,9 @@ onMounted(() => { fetchCategories() })
                     <td>{{ category.status }}</td>
                     <td>{{ category.note }}</td>
                     <td>
+                        <router-link :to="`/categories/${category.id}`" class="btn-show">
+                            <i class="fa-solid fa-eye"></i>
+                        </router-link>
                         <router-link :to="`/categories/edit/${category.id}`" class="btn-edit">
                             <i class="fa-solid fa-file-pen"></i>
                         </router-link>

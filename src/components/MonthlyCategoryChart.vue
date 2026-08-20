@@ -41,7 +41,16 @@ const monthsList = [
 ]
 
 const chartColors = [
-    '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#6366F1', '#14B8A6'
+    '#2563EB',
+    '#16A34A',
+    '#DC2626',
+    '#D97706',
+    '#9333EA',
+    '#0891B2',
+    '#DB2777',
+    '#4D7C0F',
+    '#4F46E5',
+    '#4B5563',
 ]
 
 const chartData = computed(() => {
