@@ -66,7 +66,11 @@ onMounted(() => { fetchCategories() })
             <tbody>
                 <tr v-for="category in categories">
                     <td>{{ category.id }}</td>
-                    <td>{{ category.title }}</td>
+                    <td>
+                        <router-link :to="`/categories/${category.id}`">
+                            {{ category.title }}
+                        </router-link>
+                    </td>
                     <td>{{ category.status }}</td>
                     <td>{{ category.note }}</td>
                     <td>

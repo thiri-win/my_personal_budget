@@ -13,7 +13,7 @@ const fetchItems = async () => {
         const { data, error } = await supabase
             .from('items')
             .select('*, category:categories(title, status)')
-            .order('id', { ascending: true })
+            .order('date', { ascending: true })
         if (error) throw error
         items.value = data
     } catch (error) {
