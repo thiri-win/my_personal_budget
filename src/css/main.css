@@ -47,6 +47,36 @@ input[type="radio"] {
     @apply border border-gray-300 p-2 px-5 rounded-md inline-block mb-5;
 }
 
+.date-filter {
+    @apply flex flex-wrap items-end gap-2;
+}
+
+.date-filter label {
+    @apply text-sm text-gray-600;
+}
+
+.date-filter input {
+    @apply w-auto min-w-36 mb-0 mt-1;
+}
+
+.btn-filter,
+.btn-clear,
+.pagination button {
+    @apply border border-gray-300 p-2 px-4 rounded-md text-sm;
+}
+
+.btn-filter {
+    @apply bg-gray-800 text-white;
+}
+
+.pagination {
+    @apply flex items-center justify-center gap-4 mt-5;
+}
+
+.pagination button:disabled {
+    @apply cursor-not-allowed opacity-50;
+}
+
 .btn-show,
 .btn-edit,
 .btn-delete {
