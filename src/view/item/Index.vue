@@ -116,10 +116,9 @@ onMounted(() => { fetchItems() })
                 <input type="date" v-model="endDate">
             </label>
             <button type="submit" class="btn-filter">Filter</button>
-            <button type="button" class="btn-clear" @click="clearDateFilter">Current month</button>
+            <button type="button" class="btn-clear" @click="clearDateFilter">Clear</button>
         </form>
     </div>
-    <p class="text-sm text-gray-500 mb-4">Leave both dates empty to show items from the current month.</p>
     <p v-if="loading" class="show-noti">Loading Items ... </p>
     <p v-if="!loading && !items.length" class="show-noti">No Items to display</p>
     <span class="error">{{ errorMessage }}</span>
