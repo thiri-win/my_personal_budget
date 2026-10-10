@@ -10,6 +10,7 @@ const EXPENSE_STATUS = 'နှုတ်ရန်'
 const UNCATEGORIZED = 'Uncategorized'
 const START_YEAR = 2026
 const COMPARE_MONTH_OFFSETS = [-2, -1, 0]
+const BALANCE_MONTH_OFFSETS = [-3, -2, -1, 0]
 
 const chartColors = [
     '#2563EB',
@@ -49,6 +50,8 @@ const totalBalance = ref(0)
 const monthColumns = ref([])
 const categoryRows = ref([])
 const monthBalances = ref({})
+const balanceMonthColumns = ref([])
+const totalBalances = ref({})
 const isLoading = ref(false)
 
 const availableYears = computed(() => {
@@ -128,6 +131,10 @@ const getThreeMonthWindow = (year, monthNum) => {
     return COMPARE_MONTH_OFFSETS.map(offset => getMonthMeta(year, monthNum, offset))
 }
 
+const getFourMonthWindow = (year, monthNum) => {
+    return BALANCE_MONTH_OFFSETS.map(offset => getMonthMeta(year, monthNum, offset))
+}
+
 const fetchItemsInRange = async (startDate, endDate) => {
     const { data, error } = await supabase
         .from('items')
@@ -192,18 +199,30 @@ const calculateMonthlySum = async () => {
 
     try {
         const months = getThreeMonthWindow(Number(selectedYear.value), Number(selectedMonth.value))
+        const balanceMonths = getFourMonthWindow(Number(selectedYear.value), Number(selectedMonth.value))
         const selectedMonthMeta = months[months.length - 1]
-        const items = await fetchItemsInRange(months[0].startDate, selectedMonthMeta.endDate)
+        const items = await fetchItemsInRange(balanceMonths[0].startDate, selectedMonthMeta.endDate)
         const { sumsByMonth, netsByMonth } = aggregateByMonthAndCategory(items, months)
+        const { netsByMonth: balanceNetsByMonth } = aggregateByMonthAndCategory(items, balanceMonths)
         const selectedSums = sumsByMonth[selectedMonthMeta.key]
         const categoryNames = sortCategoriesBySelectedMonth(
             collectCategoryNames(months, sumsByMonth),
             selectedSums
         )
 
+        let runningBalance = 0
+        const balancesByMonth = Object.fromEntries(
+            balanceMonths.map(month => {
+                runningBalance += balanceNetsByMonth[month.key] || 0
+                return [month.key, runningBalance]
+            })
+        )
+
         monthColumns.value = months
         categoryRows.value = buildComparisonRows(categoryNames, months, sumsByMonth)
-        monthBalances.value = netsByMonth
+        monthBalances.value = balanceNetsByMonth
+        balanceMonthColumns.value = balanceMonths
+        totalBalances.value = balancesByMonth
         categorySums.value = selectedSums
         totalBalance.value = netsByMonth[selectedMonthMeta.key]
     } catch (error) {
@@ -227,47 +246,66 @@ onMounted(calculateMonthlySum)
             </select>
         </div>
 
-        <div class="relative h-72 w-full flex justify-center items-center">
-            <p v-if="isLoading" class="text-gray-400 animate-pulse">Data ရယူနေပါသည်...</p>
-            <Doughnut
-                v-else-if="chartData.labels.length > 0"
-                :data="chartData"
-                :options="chartOptions"
-                :key="JSON.stringify(chartData)"
-            />
-            <p v-else class="text-gray-400 italic">ဒီလအတွက် ဒေတာ မရှိသေးပါခင်ဗျာ။</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="relative w-full flex justify-center items-center">
+                <p v-if="isLoading" class="text-gray-400 animate-pulse">Data ရယူနေပါသည်...</p>
+                <Doughnut v-else-if="chartData.labels.length > 0" :data="chartData" :options="chartOptions" :key="JSON.stringify(chartData)" />
+                <p v-else class="text-gray-400 italic">ဒီလအတွက် ဒေတာ မရှိသေးပါခင်ဗျာ။</p>
+            </div>
+            <div class="w-full overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>စုစုပေါင်း (MMK)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(sum, category) in categorySums" :key="category" class="border-b hover:bg-gray-50">
+                            <td>{{ category }}</td>
+                            <td class="text-right!">{{ formatAmount(sum) }}</td>
+                        </tr>
+                        <tr v-if="!isLoading && !hasCurrentMonthData">
+                            <td colspan="2">ဒေတာ မရှိပါ။</td>
+                        </tr>
+                    </tbody>
+                    <tfoot v-if="!isLoading && hasCurrentMonthData">
+                        <tr>
+                            <td>စုစုပေါင်း</td>
+                            <td class="text-right!">{{ formatAmount(currentMonthColumnTotal) }}</td>
+                        </tr>
+                        <tr>
+                            <td>လက်ကျန် စုစုပေါင်း (Net Balance)</td>
+                            <td class="text-right!" :class="netBalanceClass(totalBalance)">
+                                {{ formatAmount(totalBalance) }}
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
 
-        <div class="w-full overflow-x-auto">
-            <h2>ယခုလအလိုက် Category အလိုက် သုံးစွဲမှု စာရင်း</h2>
+        <div class="w-full overflow-x-auto mt-8">
+            <h2>လစဉ် လက်ကျန်နှင့် စုစုပေါင်း လက်ကျန်</h2>
             <table class="w-full">
                 <thead>
                     <tr>
-                        <th>Category</th>
-                        <th>စုစုပေါင်း (MMK)</th>
+                        <th>လ</th>
+                        <th>လစဉ် လက်ကျန် (Net Balance)</th>
+                        <th>စုစုပေါင်း လက်ကျန် (Total Balance)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(sum, category) in categorySums" :key="category" class="border-b hover:bg-gray-50">
-                        <td>{{ category }}</td>
-                        <td class="text-right!">{{ formatAmount(sum) }}</td>
-                    </tr>
-                    <tr v-if="!isLoading && !hasCurrentMonthData">
-                        <td colspan="2">ဒေတာ မရှိပါ။</td>
-                    </tr>
-                </tbody>
-                <tfoot v-if="!isLoading && hasCurrentMonthData">
-                    <tr>
-                        <td>စုစုပေါင်း</td>
-                        <td class="text-right!">{{ formatAmount(currentMonthColumnTotal) }}</td>
-                    </tr>
-                    <tr>
-                        <td>လက်ကျန် စုစုပေါင်း (Net Balance)</td>
-                        <td class="text-right!" :class="netBalanceClass(totalBalance)">
-                            {{ formatAmount(totalBalance) }}
+                    <tr v-for="month in balanceMonthColumns" :key="`total-balance-${month.key}`" class="border-b hover:bg-gray-50">
+                        <td>{{ month.label }}</td>
+                        <td class="text-right!" :class="netBalanceClass(monthBalances[month.key])">
+                            {{ formatAmount(monthBalances[month.key]) }}
+                        </td>
+                        <td class="text-right!" :class="netBalanceClass(totalBalances[month.key])">
+                            {{ formatAmount(totalBalances[month.key]) }}
                         </td>
                     </tr>
-                </tfoot>
+                </tbody>
             </table>
         </div>
 
@@ -283,17 +321,10 @@ onMounted(calculateMonthlySum)
                 <tbody>
                     <tr v-for="row in categoryRows" :key="row.category" class="border-b hover:bg-gray-50">
                         <td>{{ row.category }}</td>
-                        <td
-                            v-for="(month, monthIndex) in monthColumns"
-                            :key="`${row.category}-${month.key}`"
-                            class="text-right!"
-                        >
+                        <td v-for="(month, monthIndex) in monthColumns" :key="`${row.category}-${month.key}`" class="text-right!">
                             <span class="inline-flex items-center justify-end gap-1">
                                 {{ formatAmount(row.amounts[month.key]) }}
-                                <i
-                                    v-if="monthIndex > 0"
-                                    :class="trendIconClass(row.amounts[month.key], row.amounts[monthColumns[monthIndex - 1].key], monthIndex)"
-                                ></i>
+                                <i v-if="monthIndex > 0" :class="trendIconClass(row.amounts[month.key], row.amounts[monthColumns[monthIndex - 1].key], monthIndex)"></i>
                             </span>
                         </td>
                     </tr>
@@ -304,18 +335,10 @@ onMounted(calculateMonthlySum)
                 <tfoot v-if="!isLoading && hasComparisonData">
                     <tr>
                         <td>လက်ကျန် စုစုပေါင်း (Net Balance)</td>
-                        <td
-                            v-for="(month, monthIndex) in monthColumns"
-                            :key="`balance-${month.key}`"
-                            class="text-right!"
-                            :class="netBalanceClass(monthBalances[month.key])"
-                        >
+                        <td v-for="(month, monthIndex) in monthColumns" :key="`balance-${month.key}`" class="text-right!" :class="netBalanceClass(monthBalances[month.key])">
                             <span class="inline-flex items-center justify-end gap-1">
                                 {{ formatAmount(monthBalances[month.key]) }}
-                                <i
-                                    v-if="monthIndex > 0"
-                                    :class="trendIconClass(monthBalances[month.key], monthBalances[monthColumns[monthIndex - 1].key], monthIndex)"
-                                ></i>
+                                <i v-if="monthIndex > 0" :class="trendIconClass(monthBalances[month.key], monthBalances[monthColumns[monthIndex - 1].key], monthIndex)"></i>
                             </span>
                         </td>
                     </tr>
